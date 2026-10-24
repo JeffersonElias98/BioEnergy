@@ -3,62 +3,67 @@
   <meta charset="utf-8"/>
   <title>Bio-energy</title>
   <!--Bootstrap(CSS)-->
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!--Style(CSS)-->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href= "w3.css">
 </head>
 <body>
   <!-- NavBar -->
-  <nav class="nave navbar navbar-expand-lg navbar-light" style="background-color: orange">
-    <img src="./img/lampada.png" width="50" height="50" class="d-inline-block align-top" alt="" onclick="darkmode()">
-    <a class="navbar-brand" href="home.html">Bio-Energy</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link" href="home.html">Home</a>
-        <a class="nav-item nav-link" href="index.html">Simulador</a>
-        <a class="nav-item nav-link" href="quem_somos.html">Quem somos/FAQ</a>
+  <nav class="nave navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="home.html">
+        <img src="./img/lampada.png" width="40" height="40" class="me-2" alt="Bio-Energy Logo" onclick="darkmode()" style="cursor: pointer;">
+        Bio-Energy
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="home.html">Home</a>
+          <a class="nav-link active" href="index.html">Simulador</a>
+          <a class="nav-link" href="quem_somos.html">Quem somos/FAQ</a>
+        </div>
       </div>
     </div>
-  </nav>  
-      <!--Simulador-->
-  <div class="container font fadein">
+  </nav>
+    <div class="container font fadein mt-4">
     <div class="row justify-content-center">
-      <div class="col-6">   
-        <form name = "simulador_v1">
-          <header class="simulador">
-            <h1 class="font">Simulador Solar</h1>
-            <h2 class="font fadein">Quer ter uma estimativa, dado os valores no mercado, de quanto custa instalar a energia solar?</h2>
-            <br>
-          </header>
-          
-          <div>
-            <label for="name">Nome completo</label>
-            <input type="text" name="name" id="name">
-          </div>
-          
-          <div>
-            <label for="email">E-mail</label>
-            <input type="email" name="email" class="email">
-          </div> 
-          
-          <div>
-            <label for="gasto">Gasto mensal com conta de luz</label>
-            <input type="text" name="gasto" id="gasto" class="gasto">
+      <div class="col-md-8 col-lg-6">
+        <div class="card glass-card shadow-soft p-4">
+          <form name="simulador_v1">
+            <header class="simulador mb-4">
+              <h1 class="font">Simulador Solar</h1>
+              <p class="font fadein text-muted">Quer ter uma estimativa, dado os valores no mercado, de quanto custa instalar a energia solar?</p>
+            </header>
+
+            <div class="mb-3">
+            <label for="name" class="form-label">Nome completo</label>
+            <input type="text" name="name" id="name" class="form-control">
           </div>
 
-          <div>
-            <label for="cep">CEP</label>
-            <input type="text" name="cep" id="cep" class="cep-input">
+          <div class="mb-3">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="email" name="email" class="form-control email">
           </div>
 
-          <div>
-          <button name="button" type="submit" id="simulador-v1_submit" onclick=calcSimuladorSolar2()>Simular</button>
+          <div class="mb-3">
+            <label for="gasto" class="form-label">Gasto mensal com conta de luz</label>
+            <input type="text" name="gasto" id="gasto" class="form-control gasto">
+          </div>
+
+          <div class="mb-4">
+            <label for="cep" class="form-label">CEP</label>
+            <input type="text" name="cep" id="cep" class="form-control cep-input">
+          </div>
+
+          <div class="d-grid">
+            <button name="button" type="submit" class="btn btn-success" id="simulador-v1_submit" onclick="event.preventDefault(); calcSimuladorSolar2();">Simular</button>
           </div>
         </form>
+          <div id="resultado" class="mt-4 alert alert-success d-none fadein"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -68,35 +73,39 @@
   <hr>
   <p class="fadein col-10 container">*Quanto maior for o consumo de energia maior deverá ser o número de painéis solares para atender
     a demanda de energia; A localização, devido a incidência solar ser diferente em cada região, além de outros fatores, são levados em conta no valor final.
-    Dependendo da sua região, entre 4 e 9 anos seu investimento será pago e poderá gerar lucro.</p>
+    Dependendo da sua região, entre 3 e 5 anos seu investimento será pago e poderá gerar lucro.</p>
   <br>
   <br>
 
-  <footer class="w3-container w3-orange" style="height:80px; width: 2500px; margin: -30px;">
-		<div class="copy">©Copyright; 2020 Bio-Energy</div>
+    <footer class="text-center p-4 mt-5 footer" style="background-color: var(--primary); color: white;">
+		<div class="copy text-white" style="color: white !important;">©Copyright 2023 Bio-Energy</div>
   </footer>
 
   <!--Bootstrap(JS)-->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src="_js/js.js">
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="_js/js.js"></script>
   <script language=javascript type="text/javascript">
     function calcSimuladorSolar(){
-      valor = parseInt(simulador_v1.gasto.value)
-      valor = valor * 60
-      alert ("O valor de investimento estimado está em torno de R$ " + valor)
+      let valor = parseInt(document.forms["simulador_v1"]["gasto"].value);
+      if(isNaN(valor)) valor = 0;
+      valor = valor * 40;
+      let res = document.getElementById('resultado');
+      res.innerHTML = "O valor de investimento estimado está em torno de R$ " + valor;
+      res.classList.remove('d-none');
     }
 
     function calcSimuladorSolar2(){
-      gastoContaLuz = parseInt(simulador_v1.gasto.value)
-      valorInvest = gastoContaLuz * 60
-      descontoMensal = gastoContaLuz - (gastoContaLuz / 3)
-      lucro = descontoMensal * 180   
-      alert ("O valor de investimento estimado está em torno de R$ " + valorInvest + 
-      ". O seu investimento deverá ser pago entre 4 a 9 anos. E a economia total prevista até o final"
-      + " da vida útil do simulador é: R$ " + lucro)
+      let form = document.forms["simulador_v1"];
+      if (!form) return;
+      let gastoContaLuz = parseInt(form["gasto"].value);
+      if(isNaN(gastoContaLuz)) gastoContaLuz = 0;
+      let valorInvest = gastoContaLuz * 40;
+      let descontoMensal = gastoContaLuz - (gastoContaLuz / 3);
+      let lucro = descontoMensal * 180;
+      let res = document.getElementById('resultado');
+      res.innerHTML = "<strong>Investimento estimado:</strong> R$ " + valorInvest.toFixed(2) +
+      "<br>O seu investimento deverá ser pago entre <strong>3 a 5 anos</strong>.<br><strong>Economia prevista (15 anos):</strong> R$ " + lucro.toFixed(2);
+      res.classList.remove('d-none');
     }
   </script>
 </body>
