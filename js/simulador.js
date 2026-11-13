@@ -27,6 +27,7 @@
     laje: 1.12
   };
 
+  let paymentMode = 'avista';
   let lastChartData = null;
 
   function formatBRL(value) {
@@ -51,15 +52,32 @@
     return null;
   }
 
+  // Média nacional 2026 (referência Greener / Canal Solar / Portal Solar)
   function getCostPerKwp(kwp) {
-    if (kwp <= 2.5) return 4100;
+    if (kwp <= 2.5) return 5100;
     if (kwp <= 5.0) {
-      return 4100 - ((kwp - 2.5) / 2.5) * (4100 - 3150);
+      return 5100 - ((kwp - 2.5) / 2.5) * (5100 - 4100);
     }
     if (kwp <= 9.0) {
-      return 3150 - ((kwp - 5.0) / 4.0) * (3150 - 2750);
+      return 4100 - ((kwp - 5.0) / 4.0) * (4100 - 3600);
     }
-    return 2650;
+    return 3450;
+  }
+
+  // Tabela Price
+  function calcTabelaPrice(principal, monthlyRatePct, months) {
+    const i = monthlyRatePct / 100;
+    if (i <= 0 || months <= 0) {
+      return { pmt: principal / Math.max(1, months), total: principal, interest: 0 };
+    }
+    const factor = Math.pow(1 + i, months);
+    const pmt = principal * ((i * factor) / (factor - 1));
+    const total = pmt * months;
+    return {
+      pmt: pmt,
+      total: total,
+      interest: Math.max(0, total - principal)
+    };
   }
 
   function syncInputAndRange(numberId, rangeId) {
@@ -79,6 +97,24 @@
       numEl.value = rangeEl.value;
       calcularSimulacao();
     });
+  }
+
+  function setupPaymentToggle() {
+    const btnAvista = document.getElementById('btn-pag-avista');
+    const btnParcelado = document.getElementById('btn-pag-parcelado');
+    const finOptions = document.getElementById('financing-options');
+    if (!btnAvista || !btnParcelado || !finOptions) return;
+
+    function setMode(mode) {
+      paymentMode = mode;
+      btnAvista.classList.toggle('active', mode === 'avista');
+      btnParcelado.classList.toggle('active', mode === 'parcelado');
+      finOptions.style.display = mode === 'parcelado' ? 'block' : 'none';
+      calcularSimulacao();
+    }
+
+    btnAvista.addEventListener('click', function () { setMode('avista'); });
+    btnParcelado.addEventListener('click', function () { setMode('parcelado'); });
   }
 
   function setupCepLookup() {
@@ -136,7 +172,7 @@
     });
   }
 
-  function drawChart(data) {
+  function drawChart(data, hoverYear) {
     const canvas = document.getElementById('payback-chart');
     if (!canvas) return;
     lastChartData = data;
@@ -144,7 +180,7 @@
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.parentElement.getBoundingClientRect();
     const width = Math.max(280, rect.width);
-    const height = 230;
+    const height = 250;
 
     canvas.width = width * dpr;
     canvas.height = height * dpr;
@@ -160,14 +196,17 @@
     const gridColor = isDark ? 'rgba(148, 163, 184, 0.14)' : 'rgba(15, 23, 42, 0.08)';
     const noSolarColor = isDark ? '#94a3b8' : '#475569';
     const solarColor = '#10b981';
+    const financedColor = '#d97706';
 
-    const pad = { top: 18, right: 18, bottom: 32, left: 66 };
+    const pad = { top: 20, right: 20, bottom: 32, left: 66 };
     const plotW = width - pad.left - pad.right;
     const plotH = height - pad.top - pad.bottom;
 
+    const maxFin = data.isFinanced ? data.comSolarFin[data.comSolarFin.length - 1] : 0;
     const maxVal = Math.max(
       data.semSolar[data.semSolar.length - 1],
       data.comSolar[data.comSolar.length - 1],
+      maxFin,
       1000
     ) * 1.08;
 
@@ -209,6 +248,20 @@
       }
     });
 
+    // Area fill under "Com Solar À Vista"
+    ctx.beginPath();
+    data.comSolar.forEach(function (val, idx) {
+      const x = xPos(idx);
+      const y = yPos(val);
+      if (idx === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.lineTo(xPos(data.comSolar.length - 1), yPos(0));
+    ctx.lineTo(xPos(0), yPos(0));
+    ctx.closePath();
+    ctx.fillStyle = isDark ? 'rgba(16, 185, 129, 0.09)' : 'rgba(16, 185, 129, 0.08)';
+    ctx.fill();
+
     // Line: Sem Solar
     ctx.beginPath();
     ctx.strokeStyle = noSolarColor;
@@ -223,7 +276,7 @@
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Line: Com Solar
+    // Line: Com Solar À Vista
     ctx.beginPath();
     ctx.strokeStyle = solarColor;
     ctx.lineWidth = 3;
@@ -235,18 +288,34 @@
     });
     ctx.stroke();
 
-    // Payback marker if within 15 years
-    if (data.paybackYears > 0 && data.paybackYears <= 15) {
-      const px = xPos(data.paybackYears);
-      const idxFloor = Math.floor(data.paybackYears);
-      const frac = data.paybackYears - idxFloor;
+    // Line: Com Solar Parcelado (if active)
+    if (data.isFinanced) {
+      ctx.beginPath();
+      ctx.strokeStyle = financedColor;
+      ctx.lineWidth = 2.5;
+      data.comSolarFin.forEach(function (val, idx) {
+        const x = xPos(idx);
+        const y = yPos(val);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    // Payback marker
+    const activePayback = data.isFinanced ? data.paybackFinYears : data.paybackYears;
+    const activeSeries = data.isFinanced ? data.comSolarFin : data.comSolar;
+    if (activePayback > 0 && activePayback <= 15) {
+      const px = xPos(activePayback);
+      const idxFloor = Math.floor(activePayback);
+      const frac = activePayback - idxFloor;
       const valAtPayback =
-        data.comSolar[idxFloor] +
-        ((data.comSolar[Math.min(15, idxFloor + 1)] - data.comSolar[idxFloor]) * frac);
+        activeSeries[idxFloor] +
+        ((activeSeries[Math.min(15, idxFloor + 1)] - activeSeries[idxFloor]) * frac);
       const py = yPos(valAtPayback);
 
       ctx.beginPath();
-      ctx.fillStyle = '#d97706';
+      ctx.fillStyle = data.isFinanced ? financedColor : '#059669';
       ctx.arc(px, py, 5, 0, Math.PI * 2);
       ctx.fill();
 
@@ -255,6 +324,69 @@
       ctx.textAlign = px > width * 0.72 ? 'right' : 'left';
       ctx.fillText('Payback', px + (px > width * 0.72 ? -8 : 8), py - 10);
     }
+
+    // Hover indicator line & dots
+    if (typeof hoverYear === 'number' && hoverYear >= 0 && hoverYear < data.semSolar.length) {
+      const hx = xPos(hoverYear);
+      ctx.beginPath();
+      ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(15,23,42,0.18)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(hx, pad.top);
+      ctx.lineTo(hx, pad.top + plotH);
+      ctx.stroke();
+
+      [
+        { val: data.semSolar[hoverYear], color: noSolarColor },
+        { val: data.comSolar[hoverYear], color: solarColor },
+        ...(data.isFinanced ? [{ val: data.comSolarFin[hoverYear], color: financedColor }] : [])
+      ].forEach(function (pt) {
+        ctx.beginPath();
+        ctx.fillStyle = pt.color;
+        ctx.arc(hx, yPos(pt.val), 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+  }
+
+  function setupChartHover() {
+    const canvas = document.getElementById('payback-chart');
+    const tooltip = document.getElementById('chart-tooltip');
+    if (!canvas || !tooltip) return;
+
+    function handleMove(clientX) {
+      if (!lastChartData) return;
+      const rect = canvas.getBoundingClientRect();
+      const padLeft = 66;
+      const padRight = 20;
+      const plotW = rect.width - padLeft - padRight;
+      const relX = clientX - rect.left - padLeft;
+      const ratio = Math.max(0, Math.min(1, relX / plotW));
+      const yr = Math.round(ratio * (lastChartData.semSolar.length - 1));
+
+      drawChart(lastChartData, yr);
+
+      let html = '<strong>Ano ' + yr + '</strong><br>' +
+        'Sem Solar: ' + formatBRL(lastChartData.semSolar[yr]) + '<br>' +
+        '<span style="color:#10b981;">À Vista: ' + formatBRL(lastChartData.comSolar[yr]) + '</span>';
+      if (lastChartData.isFinanced) {
+        html += '<br><span style="color:#d97706;">Parcelado: ' + formatBRL(lastChartData.comSolarFin[yr]) + '</span>';
+      }
+      tooltip.innerHTML = html;
+      tooltip.style.display = 'block';
+
+      const tipX = Math.min(rect.width - 185, Math.max(8, (clientX - rect.left) + 12));
+      tooltip.style.left = tipX + 'px';
+      tooltip.style.top = '12px';
+    }
+
+    canvas.addEventListener('mousemove', function (e) { handleMove(e.clientX); });
+    canvas.addEventListener('touchmove', function (e) {
+      if (e.touches && e.touches[0]) handleMove(e.touches[0].clientX);
+    }, { passive: true });
+    canvas.addEventListener('mouseleave', function () {
+      tooltip.style.display = 'none';
+      if (lastChartData) drawChart(lastChartData);
+    });
   }
 
   window.redrawSolarChart = function () {
@@ -270,6 +402,9 @@
     const regiaoKey = document.getElementById('regiao').value || 'SE';
     const padraoKey = document.getElementById('padrao').value || 'bi';
     const telhadoKey = document.getElementById('telhado').value || 'ceramico';
+
+    const parcelas = parseInt(document.getElementById('parcelas').value, 10) || 48;
+    const jurosMensal = Math.max(0, parseFloat(document.getElementById('juros-mensal').value) || 1.65);
 
     const regiao = REGIONS[regiaoKey] || REGIONS.SE;
     const taxaMinimaKwh = TAXA_MINIMA_KWH[padraoKey] || 50;
@@ -296,17 +431,20 @@
     const kwpFinal = numPaineis * 0.55;
     const areaTelhado = numPaineis * 2.6;
 
-    // 4. Custos 2026 (Equipamentos + Instalação/Homologação)
+    // 4. Custos reais 2026 (Equipamentos + Instalação/Homologação)
     const custoKwp = getCostPerKwp(kwpFinal);
-    const investimentoTotal = kwpFinal * custoKwp * fatorTelhado;
-    const custoEquipamentos = investimentoTotal * 0.64;
-    const custoInstalacao = investimentoTotal * 0.36;
-    const investMin = investimentoTotal * 0.90;
-    const investMax = investimentoTotal * 1.12;
+    const investimentoAVista = kwpFinal * custoKwp * fatorTelhado;
+    const custoEquipamentos = investimentoAVista * 0.64;
+    const custoInstalacao = investimentoAVista * 0.36;
+    const investMin = investimentoAVista * 0.90;
+    const investMax = investimentoAVista * 1.12;
+
+    // Financiamento (Tabela Price)
+    const fin = calcTabelaPrice(investimentoAVista, jurosMensal, parcelas);
+    const isFinanced = paymentMode === 'parcelado';
 
     // 5. Lei 14.300 (Fio B a 60% em 2026) + Taxa Mínima
     const custoDisponibilidade = taxaMinimaKwh * regiao.tarifa;
-    // ~68% injetado na rede; Fio B ~28% da tarifa cheia; em 2026 cobra-se 60% do Fio B
     const custoFioBMensal = (consumoMedioKwh * 0.68) * (regiao.tarifa * 0.28 * 0.60);
     const novaContaMedia = Math.min(
       gastoMedioMensal,
@@ -326,13 +464,24 @@
 
     // 6. Projeção de 25 anos (reajuste tarifário 6% a.a., degradação 0.5% a.a.)
     const semSolar15 = [0];
-    const comSolar15 = [investimentoTotal];
+    const comSolar15 = [investimentoAVista];
+    const comSolarFin15 = [0]; // Parcelado começa sem desembolso inicial à vista, paga parcelas ao longo dos meses
+
     let acumSem = 0;
-    let acumCom = investimentoTotal;
+    let acumCom = investimentoAVista;
+    let acumComFin = 0;
+
     let paybackYears = 0;
     let paybackFound = false;
+    let paybackFinYears = 0;
+    let paybackFinFound = false;
+
     let economia15Anos = 0;
     let economia25Anos = 0;
+    let economia15AnosFin = 0;
+    let economia25AnosFin = 0;
+
+    const anosFinanciamento = parcelas / 12;
 
     for (let yr = 1; yr <= 25; yr++) {
       const fatorInflacao = Math.pow(1.06, yr - 1);
@@ -341,10 +490,23 @@
       const economiaAno = (economiaMensalMedia * 12) * fatorInflacao * fatorDegradacao;
       const gastoAnoCom = Math.max(0, gastoAnoSem - economiaAno);
 
+      // Parcela paga neste ano
+      let parcelaAno = 0;
+      if (yr <= Math.floor(anosFinanciamento)) {
+        parcelaAno = fin.pmt * 12;
+      } else if (yr - 1 < anosFinanciamento) {
+        parcelaAno = fin.pmt * ((anosFinanciamento - (yr - 1)) * 12);
+      }
+
       const prevDiff = acumSem - acumCom;
+      const prevDiffFin = acumSem - acumComFin;
+
       acumSem += gastoAnoSem;
       acumCom += gastoAnoCom;
+      acumComFin += gastoAnoCom + parcelaAno;
+
       const newDiff = acumSem - acumCom;
+      const newDiffFin = acumSem - acumComFin;
 
       if (!paybackFound && newDiff >= 0) {
         const stepGain = newDiff - prevDiff;
@@ -353,21 +515,38 @@
         paybackFound = true;
       }
 
+      if (!paybackFinFound && yr >= Math.ceil(anosFinanciamento) && newDiffFin >= 0) {
+        const stepGainFin = newDiffFin - prevDiffFin;
+        const fracFin = stepGainFin > 0 ? Math.abs(prevDiffFin) / stepGainFin : 0;
+        paybackFinYears = (yr - 1) + fracFin;
+        paybackFinFound = true;
+      }
+
       if (yr <= 15) {
         semSolar15.push(acumSem);
         comSolar15.push(acumCom);
+        comSolarFin15.push(acumComFin);
       }
       if (yr === 15) {
         economia15Anos = acumSem - acumCom;
+        economia15AnosFin = acumSem - acumComFin;
       }
       if (yr === 25) {
         economia25Anos = acumSem - acumCom;
+        economia25AnosFin = acumSem - acumComFin;
       }
     }
 
     if (!paybackFound) {
-      paybackYears = economiaMensalMedia > 0 ? investimentoTotal / (economiaMensalMedia * 12) : 99;
+      paybackYears = economiaMensalMedia > 0 ? investimentoAVista / (economiaMensalMedia * 12) : 99;
     }
+    if (!paybackFinFound) {
+      paybackFinYears = economiaMensalMedia > 0 ? fin.total / (economiaMensalMedia * 12) : 99;
+    }
+
+    const activePayback = isFinanced ? paybackFinYears : paybackYears;
+    const activeLucro15 = isFinanced ? economia15AnosFin : economia15Anos;
+    const activeLucro25 = isFinanced ? economia25AnosFin : economia25Anos;
 
     // 7. Atualizar UI
     const banner = document.getElementById('viability-banner');
@@ -375,43 +554,75 @@
     const vTitle = document.getElementById('viability-title');
     const vDesc = document.getElementById('viability-desc');
 
-    if (gastoMedioMensal < 160 || economiaMensalMedia < 75 || paybackYears > 7.5) {
+    if (gastoMedioMensal < 170 || economiaMensalMedia < 80 || activePayback > 8.5) {
       banner.className = 'viability-banner low';
       vTag.textContent = 'Baixa Viabilidade';
       vTitle.textContent = 'Retorno lento para o seu consumo atual';
       vDesc.textContent =
-        'Como sua conta média é próxima da taxa mínima da distribuidora e dos custos fixos de projeto/instalação, o investimento demoraria mais de ' +
-        paybackYears.toFixed(1).replace('.', ',') +
-        ' anos para se pagar. Avalie energia solar por assinatura ou aguarde caso seu consumo aumente.';
-    } else if (paybackYears <= 4.8 && gastoMedioMensal >= 280) {
+        'Considerando os custos reais de instalação' + (isFinanced ? ' e os juros do parcelamento' : '') +
+        ', o sistema demoraria cerca de ' + formatPayback(activePayback) +
+        ' para se pagar porque sua conta é próxima da taxa mínima. Avalie energia por assinatura ou aguarde caso seu consumo aumente.';
+    } else if (activePayback <= 5.5 && gastoMedioMensal >= 280) {
       banner.className = 'viability-banner high';
       vTag.textContent = 'Alta Viabilidade';
-      vTitle.textContent = 'Vale muito a pena instalar energia solar!';
+      vTitle.textContent = isFinanced
+        ? 'Vale a pena mesmo parcelado!'
+        : 'Vale muito a pena instalar energia solar!';
       vDesc.textContent =
         'Com sua média anual de ' + formatBRL(gastoMedioMensal) +
-        '/mês (incluindo o pico de verão), o sistema se paga em cerca de ' +
-        formatPayback(paybackYears) + ' e gera lucro líquido por mais de 20 anos.';
+        '/mês (incluindo o verão), o sistema se paga em cerca de ' +
+        formatPayback(activePayback) +
+        (isFinanced ? ' (já descontando os juros de ' + formatBRL(fin.interest) + ' do financiamento).' : ' e gera lucro líquido por mais de 20 anos.');
     } else {
       banner.className = 'viability-banner medium';
       vTag.textContent = 'Viabilidade Moderada';
-      vTitle.textContent = 'Vale a pena pensando no médio e longo prazo';
+      vTitle.textContent = 'Vale a pena no médio e longo prazo';
       vDesc.textContent =
-        'O retorno estimado é de ' + formatPayback(paybackYears) +
-        '. Embora a conta não seja altíssima, os reajustes anuais da tarifa e os picos de verão tornam o investimento positivo ao longo dos anos.';
+        'O retorno estimado é de ' + formatPayback(activePayback) +
+        (isFinanced ? ' com parcelamento em ' + parcelas + 'x.' : '.') +
+        ' Os reajustes anuais da tarifa e os picos de verão tornam o investimento positivo ao longo da vida útil.';
     }
 
-    document.getElementById('res-investimento').textContent = formatBRL(investimentoTotal);
-    document.getElementById('res-invest-faixa').textContent =
-      'Faixa de mercado: ' + formatBRL(investMin) + ' a ' + formatBRL(investMax);
+    document.getElementById('res-investimento').textContent = isFinanced
+      ? formatBRL(fin.total)
+      : formatBRL(investimentoAVista);
+    document.getElementById('res-invest-faixa').textContent = isFinanced
+      ? 'À vista: ' + formatBRL(investimentoAVista) + ' (+ ' + formatBRL(fin.interest) + ' de juros)'
+      : 'Faixa de mercado: ' + formatBRL(investMin) + ' a ' + formatBRL(investMax);
 
-    document.getElementById('res-payback').textContent = paybackYears > 25 ? '+25 anos' : formatPayback(paybackYears);
+    document.getElementById('res-payback').textContent = activePayback > 25 ? '+25 anos' : formatPayback(activePayback);
     document.getElementById('res-economia-mes').textContent = formatBRL(economiaMensalMedia) + '/mês';
     document.getElementById('res-nova-conta').textContent =
       'Nova conta média estimada: ' + formatBRL(novaContaMedia) + '/mês';
 
-    document.getElementById('res-lucro-25').textContent = formatBRL(Math.max(0, economia25Anos));
+    document.getElementById('res-lucro-25').textContent = formatBRL(Math.max(0, activeLucro25));
     document.getElementById('res-lucro-15').textContent =
-      'Em 15 anos: ' + formatBRL(Math.max(0, economia15Anos));
+      'Em 15 anos: ' + formatBRL(Math.max(0, activeLucro15));
+
+    // Card de Parcelamento
+    const finCard = document.getElementById('financing-card');
+    const legendParcelado = document.getElementById('legend-parcelado');
+    if (isFinanced) {
+      finCard.style.display = 'block';
+      if (legendParcelado) legendParcelado.style.display = 'inline-flex';
+      document.getElementById('fin-badge-prazo').textContent = parcelas + 'x de ' + formatBRL(fin.pmt);
+      document.getElementById('fin-parcela').textContent = formatBRL(fin.pmt) + '/mês';
+      document.getElementById('fin-total-pago').textContent = formatBRL(fin.total);
+      document.getElementById('fin-total-juros').textContent = '+ ' + formatBRL(fin.interest);
+
+      const diferencaMensal = fin.pmt - economiaMensalMedia;
+      const fluxoEl = document.getElementById('fin-fluxo-mensal');
+      if (diferencaMensal <= 0) {
+        fluxoEl.textContent = 'Sobra ' + formatBRL(Math.abs(diferencaMensal)) + '/mês';
+        fluxoEl.style.color = 'var(--primary)';
+      } else {
+        fluxoEl.textContent = 'Completa ' + formatBRL(diferencaMensal) + '/mês';
+        fluxoEl.style.color = 'var(--solar-text)';
+      }
+    } else {
+      finCard.style.display = 'none';
+      if (legendParcelado) legendParcelado.style.display = 'none';
+    }
 
     // Detalhes Técnicos & Custos
     document.getElementById('det-media-real').textContent = formatBRL(gastoMedioMensal) + '/mês';
@@ -438,7 +649,10 @@
     drawChart({
       semSolar: semSolar15,
       comSolar: comSolar15,
-      paybackYears: paybackYears
+      comSolarFin: comSolarFin15,
+      paybackYears: paybackYears,
+      paybackFinYears: paybackFinYears,
+      isFinanced: isFinanced
     });
   };
 
@@ -461,11 +675,16 @@
   document.addEventListener('DOMContentLoaded', function () {
     syncInputAndRange('gasto-normal', 'range-normal');
     syncInputAndRange('gasto-verao', 'range-verao');
+    setupPaymentToggle();
     setupCepLookup();
+    setupChartHover();
 
-    ['meses-verao', 'regiao', 'padrao', 'telhado'].forEach(function (id) {
+    ['meses-verao', 'regiao', 'padrao', 'telhado', 'parcelas', 'juros-mensal'].forEach(function (id) {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('change', calcularSimulacao);
+      if (el) {
+        el.addEventListener('change', calcularSimulacao);
+        el.addEventListener('input', calcularSimulacao);
+      }
     });
 
     const form = document.getElementById('simulador-form');
@@ -484,7 +703,6 @@
       if (lastChartData) drawChart(lastChartData);
     });
 
-    // Executa simulação inicial para o usuário já visualizar dados reais ao abrir
     calcularSimulacao();
   });
 })();

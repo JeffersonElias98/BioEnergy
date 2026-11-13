@@ -127,6 +127,38 @@
               </div>
             </div>
 
+            <div class="seasonal-box" style="margin-bottom: 20px;">
+              <div class="seasonal-header" style="margin-bottom: 10px;">
+                <span class="form-label" style="margin:0;">Forma de Pagamento</span>
+              </div>
+
+              <div class="segmented-control" role="group" aria-label="Forma de pagamento">
+                <button type="button" id="btn-pag-avista" class="segmented-btn active" data-mode="avista">À Vista</button>
+                <button type="button" id="btn-pag-parcelado" class="segmented-btn" data-mode="parcelado">Parcelado (Financiado)</button>
+              </div>
+
+              <div id="financing-options" class="financing-options" style="display: none;">
+                <div class="form-row-2">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="parcelas" class="form-label">Parcelas</label>
+                    <select id="parcelas" class="form-control">
+                      <option value="24">24x (2 anos)</option>
+                      <option value="36">36x (3 anos)</option>
+                      <option value="48" selected>48x (4 anos)</option>
+                      <option value="60">60x (5 anos)</option>
+                      <option value="72">72x (6 anos)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="juros-mensal" class="form-label">Juros médios (% a.m.)</label>
+                    <input type="number" id="juros-mensal" class="form-control" value="1.65" min="0.1" max="5.0" step="0.05">
+                  </div>
+                </div>
+                <div class="form-hint">Média de bancos e fintechs solares em 2026: 1,35% a 1,99% ao mês (Tabela Price).</div>
+              </div>
+            </div>
+
             <button type="submit" id="simulador-v1_submit" class="btn btn-primary">
               Atualizar Simulação
             </button>
@@ -169,6 +201,32 @@
               <div id="res-lucro-25" class="metric-value">R$ 0,00</div>
               <div id="res-lucro-15" class="metric-sub">Em 15 anos: R$ 0,00</div>
             </div>
+          </div>
+
+          <!-- Resumo do Parcelamento (visível quando Parcelado está ativo) -->
+          <div id="financing-card" class="financing-highlight" style="display: none;">
+            <div class="financing-highlight-title">
+              <span>Simulação do Parcelamento (Tabela Price)</span>
+              <span id="fin-badge-prazo" style="font-size: 0.8rem;">48x de R$ 0,00</span>
+            </div>
+            <ul class="breakdown-list">
+              <li class="breakdown-item">
+                <span>Valor da parcela mensal</span>
+                <strong id="fin-parcela">R$ 0,00/mês</strong>
+              </li>
+              <li class="breakdown-item">
+                <span>Total pago parcelado (com juros)</span>
+                <strong id="fin-total-pago">R$ 0,00</strong>
+              </li>
+              <li class="breakdown-item">
+                <span>Diferença de juros sobre o valor à vista</span>
+                <strong id="fin-total-juros" style="color: var(--danger);">+ R$ 0,00</strong>
+              </li>
+              <li class="breakdown-item">
+                <span>Impacto mensal durante as parcelas (parcela &minus; economia)</span>
+                <strong id="fin-fluxo-mensal">R$ 0,00/mês</strong>
+              </li>
+            </ul>
           </div>
 
           <!-- Comparativo Normal vs Verão -->
@@ -245,9 +303,15 @@
           <!-- Gráfico de Payback -->
           <div class="surface-card">
             <h3 class="section-title">Gasto Acumulado em 15 Anos</h3>
-            <p class="section-subtitle" style="margin-bottom: 4px;">Linha tracejada: sem energia solar &bull; Linha verde: investimento + conta mínima com solar</p>
+            <p class="section-subtitle" style="margin-bottom: 4px;">Passe o mouse ou toque no gráfico para comparar os valores ano a ano.</p>
+            <div class="chart-legend" id="chart-legend">
+              <span class="legend-item"><span class="legend-swatch dashed"></span> Sem Energia Solar</span>
+              <span class="legend-item"><span class="legend-swatch" style="background-color: #10b981;"></span> Com Solar (À Vista)</span>
+              <span class="legend-item" id="legend-parcelado" style="display: none;"><span class="legend-swatch" style="background-color: #d97706;"></span> Com Solar (Parcelado)</span>
+            </div>
             <div class="chart-wrap">
               <canvas id="payback-chart"></canvas>
+              <div id="chart-tooltip" class="chart-tooltip"></div>
             </div>
           </div>
         </section>
