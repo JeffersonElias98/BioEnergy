@@ -693,7 +693,7 @@ main {
 .chart-wrap {
   position: relative;
   width: 100%;
-  height: 230px;
+  height: 250px;
   margin-top: 12px;
 }
 
@@ -701,6 +701,102 @@ main {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-swatch.dashed {
+  background: repeating-linear-gradient(to right, var(--text-muted) 0 4px, transparent 4px 7px);
+}
+
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 11px;
+  font-size: 0.78rem;
+  box-shadow: var(--shadow-md);
+  color: var(--text);
+  z-index: 10;
+  display: none;
+  min-width: 170px;
+}
+
+/* Segmented Payment Toggle */
+.segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background-color: var(--bg-subtle);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.segmented-btn {
+  padding: 9px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+.segmented-btn.active {
+  background-color: var(--bg-elevated);
+  color: var(--primary-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.financing-options {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.financing-highlight {
+  background-color: var(--solar-soft);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.financing-highlight-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--solar-text);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 /* Home Page */
