@@ -1,115 +1,118 @@
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <title>Bio-energy</title>
-  <!--Bootstrap(CSS)-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!--Style(CSS)-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | Bio-Energy</title>
+  <meta name="description" content="Entenda como funciona a energia solar fotovoltaica residencial, seus benefícios financeiros e ambientais, e simule seu investimento.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href= "w3.css">
 </head>
 <body>
-  <!-- NavBar -->
-  <nav class="nave navbar navbar-expand-lg navbar-dark shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="home.html">
-        <img src="./img/lampada.png" width="40" height="40" class="me-2" alt="Bio-Energy Logo" onclick="darkmode()" style="cursor: pointer;">
-        Bio-Energy
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="navbar-brand" href="home.html">
+        <img src="./img/lampada.png" alt="Bio-Energy Logo">
+        <span class="brand-name">Bio-Energy</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link active" href="home.html">Home</a>
-          <a class="nav-link" href="index.html">Simulador</a>
-          <a class="nav-link" href="quem_somos.html">Quem somos/FAQ</a>
-        </div>
+
+      <div class="navbar-actions">
+        <ul class="nav-links" id="nav-links">
+          <li><a class="nav-link active" href="home.html">Home</a></li>
+          <li><a class="nav-link" href="index.html">Simulador</a></li>
+          <li><a class="nav-link" href="quem_somos.html">Quem somos / FAQ</a></li>
+        </ul>
+
+        <button type="button" id="theme-toggle-btn" class="theme-toggle" onclick="darkmode()" aria-label="Ativar modo escuro" title="Alternar tema">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+
+        <button type="button" id="nav-mobile-btn" class="nav-mobile-btn" aria-label="Abrir menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </div>
   </nav>
-  <br>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-10">
-        <br>
-          <p class="fadein">Incentivados pela disciplina de PCA, matéria que envolve um projeto de introdução às aplicações web,
-            criamos um site que possa instruir e informar nossa comunidade sobre como novas tecnologias podem ser
-              usadas na preservação do meio ambiente. O site tem como objetivo explicar e simular uma instalação de
-              painel solar residencial, que vai de acordo com o tema que escolhemos para realizar o trabalho.
-            A Organização das Nações Unidas definiu metas para toda comunidade global se pautar em termos de avanços sociais,
-            critérios científicos e políticas públicas. Nosso tema é Energia Limpa e Acessível então a proposta desse site é
-            canalizar a importância dessa questão e sugerir alguma solução que buscamos no mercado.
-            A consciência e responsabilização pelo meio ambiente também é um ato importante que envolveu todo o estudo feito
-            pelos alunos da Unigranrio em cima desta pesquisa. Nossa intenção é demonstrar que podemos repensar o consumo de
-            energia e como a web pode ser uma ferramenta propulsora desses avanços porque além de informar, atrair atenção do
-            público, pode e já comercializa soluções inovadoras.</p>
-        <br>
-        <img src="./img/painel1.jpg" class="painel fadein col-12" alt="Painel com informações sobre energia solar"><BR>
-        <br>
-          <p class="fadein">Vivemos num país tropical e contamos com um ótimo recurso natural que é a alta
-            incidência de luz solar, a incidência dos raios solares que ocorre quase o ano
-            inteiro no Brasil ainda é pouco explorada pelos painéis solares, produto que
-            transforma o telhado das casas num gerador de energia limpa.
-          A tecnologia dos painéis fotovoltaicos trabalha transformando a luz do sol
-          (os fótons) em energia, o processo ocorre porque os painéis são feitos com
-          materiais semicondutores (como o silício) que ao receber a luz excitam os elétrons
-          desse material e produz energia que alimentará uma bateria com função de igualar essa
-            energia com a mesma frequência da sua casa.
-          Nesse momento a energia solar já serve para ser consumida, sem custos e sem resíduos
-          ou poluição. A preservação do meio ambiente é um tema que deve ser reforçado na nossa
-            cultura, que ao depender de concessionárias de luz, também é dependente das suas
-            formas de gerar energia que são insustentáveis.
-          Empresas do ramo de painel solar fotovoltaico já oferecem a instalação e a venda do
-            produto, que apesar do custo elevado é mostrado por cálculo a vantagem ao longo dos
-            anos que a energia solar residencial oferece.¹
-          Sendo assim uma alternativa às contas tarifadas por conta das usinas hidrelétricas ou
-          termonucelares (ambas poluentes) é a energia solar, que é um investimento à longo prazo,
-          uma possibilidade sustentável e que barateia o custo mensal com luz num país tão perto
-          da Linha do Equador, de clima tropical e que conta com abundância de sol até nas estações
-          mais frias.
-          Não há contraindicações, essa aposta no futuro oferece liberdade e preço justo no fim do
-            mês, pois durante os dias de chuva a energia não consumida dos dias de sol é armazenada
-            abastecendo a residência e o prazo para a troca dos painéis começa a partir dos 15 anos.
-            Até lá o baixo custo das contas de luz e a consciência limpa já valem a mudança.</p>
-          <hr>
-          <br>
-          <!--Video-->
-          <h3 class="fadein">Um pouco sobre como funciona a energia solar:</h3>
-          <br>
-          <div align="center">
-            <iframe width="560" height="315" class="center" src="https://www.youtube.com/embed/JTqz_xzozl0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+  <main>
+    <div class="container">
+      <section class="hero-section fade-in">
+        <div class="hero-grid">
+          <div>
+            <h1 class="hero-title">Transforme a luz do sol em economia real na sua conta de luz</h1>
+            <p class="hero-lead">
+              Vivemos em um país tropical com alta incidência solar o ano inteiro. A energia solar residencial reduz drasticamente o impacto das tarifas e dos picos de consumo no verão, gerando energia limpa direto no seu telhado.
+            </p>
+            <div class="hero-actions">
+              <a href="index.html" class="btn btn-primary">Simular meu sistema</a>
+              <a href="quem_somos.html" class="btn btn-outline">Perguntas frequentes</a>
+            </div>
           </div>
-          <br>
-          <div align="right"><u class="fadein">Video por <a href="https://www.youtube.com/channel/UC9DRwJ8Cpo773_WymBvA_9w?feature=emb_ch_name_ex" target="_blank">BlueSol</a></u></div>
-          <br>
 
-          <!--referencia-->
-          <p style= font-size:14px; class="fadein">1. Santos, Darlyson Hécliton Silva. 2017. Um estudo sobre a viabilidade econômica da microgeração fotovoltaica residencial.
-            Disponível em: <a href="https://repositorio.ufpb.br/jspui/handle/123456789/4377" target="blank">https://repositorio.ufpb.br/jspui/handle/123456789/4377</a></p>
-          <br>
+          <div class="hero-image-card">
+            <img src="./img/painel1.jpg" alt="Painéis solares fotovoltaicos instalados em telhado residencial">
+          </div>
+        </div>
+      </section>
 
-      </div>
+      <section class="features-grid fade-in" aria-label="Principais benefícios">
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <h2 style="font-size: 1.1rem; margin-bottom: 8px;">Economia de até 85%</h2>
+          <p style="font-size: 0.94rem; margin: 0;">Mesmo com as regras atuais da Lei 14.300 (Fio B) e taxa mínima da distribuidora, a redução mensal compensa rapidamente o investimento.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+          </div>
+          <h2 style="font-size: 1.1rem; margin-bottom: 8px;">Proteção no Verão</h2>
+          <p style="font-size: 0.94rem; margin: 0;">Os créditos acumulados nos meses mais amenos ajudam a cobrir o aumento de consumo com ar-condicionado e refrigeração no verão.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h2 style="font-size: 1.1rem; margin-bottom: 8px;">25+ Anos de Vida Útil</h2>
+          <p style="font-size: 0.94rem; margin: 0;">Os módulos fotovoltaicos têm garantia de desempenho de 25 anos e exigem manutenção mínima, valorizando também o seu imóvel.</p>
+        </article>
+      </section>
+
+      <section class="surface-card fade-in" style="margin-bottom: 48px;">
+        <div class="container-narrow" style="margin: 0 auto;">
+          <h2 style="font-size: 1.5rem; margin-bottom: 12px;">Como funciona a energia solar residencial?</h2>
+          <p>
+            Os painéis fotovoltaicos são fabricados com materiais semicondutores (como o silício) que convertem a radiação solar em corrente elétrica contínua. Em seguida, o inversor converte essa energia para o padrão da sua residência, sincronizado com a rede da concessionária.
+          </p>
+          <p style="margin-bottom: 24px;">
+            Durante o dia, você consome a energia gerada instantaneamente. O excedente é injetado na rede elétrica e vira créditos de energia para abater o consumo noturno ou de meses mais quentes.<sup>1</sup>
+          </p>
+
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/JTqz_xzozl0" title="Como funciona a energia solar fotovoltaica" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <p style="font-size: 0.85rem; text-align: right; margin-top: 10px; margin-bottom: 0;">
+            Vídeo educativo por <a href="https://www.youtube.com/channel/UC9DRwJ8Cpo773_WymBvA_9w" target="_blank" rel="noopener noreferrer">BlueSol Energia Solar</a>
+          </p>
+        </div>
+      </section>
+
+      <p class="disclaimer" style="margin-bottom: 40px;">
+        1. Referência acadêmica original do projeto: Santos, Darlyson Hécliton Silva (2017). <em>Um estudo sobre a viabilidade econômica da microgeração fotovoltaica residencial</em>. Disponível em: <a href="https://repositorio.ufpb.br/jspui/handle/123456789/4377" target="_blank" rel="noopener noreferrer">Repositório UFPB</a>.
+      </p>
     </div>
-  </div>
+  </main>
 
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <footer class="text-center p-4 mt-5 footer" style="background-color: var(--primary); color: white;">
-		<div class="copy text-white" style="color: white !important;">©Copyright 2023 Bio-Energy</div>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Bio-Energy &mdash; Energia Limpa e Acessível</span>
+      <span>Projeto originado na Unigranrio &bull; Versão Reformulada</span>
+    </div>
   </footer>
 
-  <!--Bootstrap(JS)-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="_js/js.js"></script>
+  <script src="js/js.js"></script>
 </body>
 </html>

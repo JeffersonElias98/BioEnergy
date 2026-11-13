@@ -1,121 +1,131 @@
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <title>Bio-energy</title>
-  <!--Bootstrap(CSS)-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!--Style(CSS)-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quem Somos e FAQ | Bio-Energy</title>
+  <meta name="description" content="Conheça a história do projeto Bio-Energy e tire suas dúvidas sobre cálculos, custos de instalação, Lei 14.300 e funcionamento da energia solar.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href= "w3.css">
 </head>
 <body>
-  <!-- NavBar -->
-  <nav class="nave navbar navbar-expand-lg navbar-dark shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="home.html">
-        <img src="./img/lampada.png" width="40" height="40" class="me-2" alt="Bio-Energy Logo" onclick="darkmode()" style="cursor: pointer;">
-        Bio-Energy
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="navbar-brand" href="home.html">
+        <img src="./img/lampada.png" alt="Bio-Energy Logo">
+        <span class="brand-name">Bio-Energy</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="home.html">Home</a>
-          <a class="nav-link" href="index.html">Simulador</a>
-          <a class="nav-link active" href="quem_somos.html">Quem somos/FAQ</a>
-        </div>
+
+      <div class="navbar-actions">
+        <ul class="nav-links" id="nav-links">
+          <li><a class="nav-link" href="home.html">Home</a></li>
+          <li><a class="nav-link" href="index.html">Simulador</a></li>
+          <li><a class="nav-link active" href="quem_somos.html">Quem somos / FAQ</a></li>
+        </ul>
+
+        <button type="button" id="theme-toggle-btn" class="theme-toggle" onclick="darkmode()" aria-label="Ativar modo escuro" title="Alternar tema">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+
+        <button type="button" id="nav-mobile-btn" class="nav-mobile-btn" aria-label="Abrir menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </div>
   </nav>
-  <br>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-10">
-        <p class="fadein">Somos alunos da Unigranrio, cursando análise e
-        desenvolvimento de sistemas, e sistemas de informação. Decidimos
-        criar um site, com o objetivo de esclarecer sobre a energia solar,
-        e mostrar o custo benefício de adquirir um paínel solar.</p>
-        <hr width="100%">
-                <!--FAQ-->
-        <h2 class="fadeIn mb-4">Perguntas Frequentes</h2>
-        <div class="accordion glass-card shadow-soft mb-5" id="faqAccordion">
-          <div class="accordion-item bg-transparent">
-            <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button collapsed bg-transparent text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                Que cálculos vocês utilizam no simulador?
-              </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Observando o valor de investimento médio dos painéis solares no mercado, usamos no simulador a multiplicação do valor da conta de luz do usuário por 40 para chegar a um valor próximo do real atual. Para calcular a economia, consideramos que 1/3 da conta é taxa mínima da concessionária e os outros 2/3 são economizados.
-              </div>
-            </div>
-          </div>
 
-          <div class="accordion-item bg-transparent">
-            <h2 class="accordion-header" id="headingTwo">
-              <button class="accordion-button collapsed bg-transparent text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                O painel continua funcionando em dias chuvosos ou nublados?
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Sim, os painéis solares funcionam tanto em dias ensolarados como em dias cinzentos, uma vez que esta tecnologia opera com a incidência dos raios ultravioleta, e não do calor do sol.
-              </div>
-            </div>
-          </div>
+  <main>
+    <div class="container container-narrow">
+      <header class="page-header fade-in">
+        <h1>Quem Somos &amp; Perguntas Frequentes</h1>
+        <p>Conheça a origem do Bio-Energy e entenda os critérios técnicos e financeiros usados no nosso simulador.</p>
+      </header>
 
-          <div class="accordion-item bg-transparent">
-            <h2 class="accordion-header" id="headingThree">
-              <button class="accordion-button collapsed bg-transparent text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                O sistema de energia solar faz barulho?
-              </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Não, ele é super silencioso.
-              </div>
-            </div>
-          </div>
+      <section class="surface-card fade-in" style="margin-bottom: 36px;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 10px;">Sobre o Projeto</h2>
+        <p style="margin-bottom: 12px;">
+          O <strong>Bio-Energy</strong> nasceu originalmente como um projeto acadêmico desenvolvido por alunos de Análise e Desenvolvimento de Sistemas e Sistemas de Informação da Unigranrio, alinhado ao Objetivo de Desenvolvimento Sustentável da ONU de <em>Energia Limpa e Acessível</em>.
+        </p>
+        <p style="margin-bottom: 0;">
+          Em sua versão reformulada, o sistema foi atualizado para refletir os custos reais do mercado fotovoltaico brasileiro em 2026, incluindo a variação sazonal do consumo no verão, custos de equipamentos e instalação, padrão de entrada e as regras da Lei 14.300 (Fio B).
+        </p>
+      </section>
 
-          <div class="accordion-item bg-transparent">
-            <h2 class="accordion-header" id="headingFour">
-              <button class="accordion-button collapsed bg-transparent text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                Ele funciona durante a noite?
-              </button>
-            </h2>
-            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Não, você produz energia durante o dia e se gerar mais do que consome, sua energia vai para a rede da distribuidora e vira créditos de energia que serão usados para seu consumo de noite.
-              </div>
-            </div>
-          </div>
+      <section class="fade-in">
+        <h2 style="font-size: 1.4rem; margin-bottom: 18px;">Perguntas Frequentes</h2>
 
-          <div class="accordion-item bg-transparent">
-            <h2 class="accordion-header" id="headingFive">
-              <button class="accordion-button collapsed bg-transparent text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                Quantos anos dura um sistema de energia solar fotovoltaica?
-              </button>
-            </h2>
-            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                O sistema como um todo, se bem cuidado e composto por equipamentos de qualidade, deve durar 25 anos ou mais.
-              </div>
+        <div class="faq-list" id="faqAccordion">
+          <article class="faq-item open">
+            <button type="button" class="faq-question">
+              <span>Como o novo simulador calcula o custo e a viabilidade?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Calculamos sua média anual ponderando os meses normais e os meses de verão (quando a conta costuma subir). A partir da tarifa média e irradiação solar (HSP) da sua região, dimensionamos a potência necessária em kWp e a quantidade de módulos de 550W. O valor total considera preços atuais por kWp instalado (equipamentos + instalação, projeto e homologação) e desconta na economia a taxa mínima do padrão de entrada e a cobrança de 60% do Fio B vigente em 2026 (Lei 14.300).
             </div>
-          </div>
+          </article>
+
+          <article class="faq-item">
+            <button type="button" class="faq-question">
+              <span>Por que vocês perguntam a média gasta no verão separadamente?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              No Brasil, o uso intenso de ar-condicionado, ventiladores e geladeiras no verão eleva bastante a fatura de energia. Se você dimensionar um sistema solar olhando apenas para um mês ameno, faltará energia nos meses quentes. Considerar o verão garante um cálculo honesto do tamanho do sistema e do retorno financeiro real.
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <button type="button" class="faq-question">
+              <span>Para quem a energia solar pode não valer a pena agora?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Se a sua conta média mensal for muito baixa (por exemplo, abaixo de R$ 150 a R$ 180), os custos fixos de projeto, homologação e taxa mínima da distribuidora fazem com que o retorno demore mais de 7 anos. Nesses casos, alternativas como energia solar por assinatura podem ser mais vantajosas sem exigir investimento inicial.
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <button type="button" class="faq-question">
+              <span>O painel continua funcionando em dias chuvosos ou nublados?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Sim. Os painéis solares geram eletricidade através da radiação luminosa, não do calor direto. Em dias nublados ou chuvosos a produção é menor do que em dias de céu limpo, mas o sistema continua operando e utiliza os créditos acumulados nos dias ensolarados para equilibrar sua conta.
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <button type="button" class="faq-question">
+              <span>Ele funciona durante a noite?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Sistemas conectados à rede (on-grid) não geram energia à noite. O excedente produzido durante o dia é injetado na rede da distribuidora e convertido em créditos de energia, que são usados automaticamente para compensar o seu consumo noturno.
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <button type="button" class="faq-question">
+              <span>O sistema faz barulho e quanto tempo dura?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Os painéis são completamente silenciosos e o inversor emite apenas um zumbido mínimo imperceptível fora do local de instalação. Com equipamentos de qualidade e limpeza periódica, a vida útil dos módulos supera 25 anos.
+            </div>
+          </article>
         </div>
-      </div>
+      </section>
     </div>
-  </div>
-  <br>
-  <br>
-  <footer class="text-center p-4 mt-5 footer" style="background-color: var(--primary); color: white;">
-		<div class="copy text-white" style="color: white !important;">©Copyright 2023 Bio-Energy</div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Bio-Energy &mdash; Energia Limpa e Acessível</span>
+      <span><a href="index.html">Ir para o Simulador</a></span>
+    </div>
   </footer>
 
-  <!--Bootstrap(JS)-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="_js/js.js"></script>
+  <script src="js/js.js"></script>
 </body>
 </html>
