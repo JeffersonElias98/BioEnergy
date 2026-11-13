@@ -129,12 +129,13 @@
 
             <div class="seasonal-box" style="margin-bottom: 20px;">
               <div class="seasonal-header" style="margin-bottom: 10px;">
-                <span class="form-label" style="margin:0;">Forma de Pagamento</span>
+                <span class="form-label" style="margin:0;">Pagamento (Sistema + Instalação)</span>
+                <span class="seasonal-badge">À Vista ou Parcelado</span>
               </div>
 
               <div class="segmented-control" role="group" aria-label="Forma de pagamento">
                 <button type="button" id="btn-pag-avista" class="segmented-btn active" data-mode="avista">À Vista</button>
-                <button type="button" id="btn-pag-parcelado" class="segmented-btn" data-mode="parcelado">Parcelado (Financiado)</button>
+                <button type="button" id="btn-pag-parcelado" class="segmented-btn" data-mode="parcelado">Parcelado (Financiamento)</button>
               </div>
 
               <div id="financing-options" class="financing-options" style="display: none;">
@@ -142,6 +143,7 @@
                   <div class="form-group" style="margin-bottom: 0;">
                     <label for="parcelas" class="form-label">Parcelas</label>
                     <select id="parcelas" class="form-control">
+                      <option value="12">12x (1 ano)</option>
                       <option value="24">24x (2 anos)</option>
                       <option value="36">36x (3 anos)</option>
                       <option value="48" selected>48x (4 anos)</option>
@@ -203,10 +205,10 @@
             </div>
           </div>
 
-          <!-- Resumo do Parcelamento (visível quando Parcelado está ativo) -->
-          <div id="financing-card" class="financing-highlight" style="display: none;">
+          <!-- Resumo do Parcelamento (sempre visível para comparação À Vista vs Parcelado) -->
+          <div id="financing-card" class="financing-highlight">
             <div class="financing-highlight-title">
-              <span>Simulação do Parcelamento (Tabela Price)</span>
+              <span>Simulação Parcelada (Sistema + Instalação)</span>
               <span id="fin-badge-prazo" style="font-size: 0.8rem;">48x de R$ 0,00</span>
             </div>
             <ul class="breakdown-list">

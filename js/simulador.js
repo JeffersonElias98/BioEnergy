@@ -599,29 +599,26 @@
     document.getElementById('res-lucro-15').textContent =
       'Em 15 anos: ' + formatBRL(Math.max(0, activeLucro15));
 
-    // Card de Parcelamento
+    // Card de Parcelamento (sempre visível para comparar À Vista vs Parcelado)
     const finCard = document.getElementById('financing-card');
     const legendParcelado = document.getElementById('legend-parcelado');
-    if (isFinanced) {
-      finCard.style.display = 'block';
-      if (legendParcelado) legendParcelado.style.display = 'inline-flex';
-      document.getElementById('fin-badge-prazo').textContent = parcelas + 'x de ' + formatBRL(fin.pmt);
-      document.getElementById('fin-parcela').textContent = formatBRL(fin.pmt) + '/mês';
-      document.getElementById('fin-total-pago').textContent = formatBRL(fin.total);
-      document.getElementById('fin-total-juros').textContent = '+ ' + formatBRL(fin.interest);
+    if (finCard) finCard.style.display = 'block';
+    if (legendParcelado) legendParcelado.style.display = isFinanced ? 'inline-flex' : 'none';
 
-      const diferencaMensal = fin.pmt - economiaMensalMedia;
-      const fluxoEl = document.getElementById('fin-fluxo-mensal');
-      if (diferencaMensal <= 0) {
-        fluxoEl.textContent = 'Sobra ' + formatBRL(Math.abs(diferencaMensal)) + '/mês';
-        fluxoEl.style.color = 'var(--primary)';
-      } else {
-        fluxoEl.textContent = 'Completa ' + formatBRL(diferencaMensal) + '/mês';
-        fluxoEl.style.color = 'var(--solar-text)';
-      }
+    document.getElementById('fin-badge-prazo').textContent =
+      parcelas + 'x de ' + formatBRL(fin.pmt) + ' (' + jurosMensal.toFixed(2).replace('.', ',') + '% a.m.)';
+    document.getElementById('fin-parcela').textContent = formatBRL(fin.pmt) + '/mês';
+    document.getElementById('fin-total-pago').textContent = formatBRL(fin.total);
+    document.getElementById('fin-total-juros').textContent = '+ ' + formatBRL(fin.interest);
+
+    const diferencaMensal = fin.pmt - economiaMensalMedia;
+    const fluxoEl = document.getElementById('fin-fluxo-mensal');
+    if (diferencaMensal <= 0) {
+      fluxoEl.textContent = 'Sobra ' + formatBRL(Math.abs(diferencaMensal)) + '/mês';
+      fluxoEl.style.color = 'var(--primary)';
     } else {
-      finCard.style.display = 'none';
-      if (legendParcelado) legendParcelado.style.display = 'none';
+      fluxoEl.textContent = 'Completa ' + formatBRL(diferencaMensal) + '/mês';
+      fluxoEl.style.color = 'var(--solar-text)';
     }
 
     // Detalhes Técnicos & Custos
